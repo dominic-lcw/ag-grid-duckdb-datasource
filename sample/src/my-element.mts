@@ -31,8 +31,8 @@ class AgGridDuckDb extends LitElement {
   onDivChanged(div: Element | undefined): void {
     if (!div) return;
 
-    const src = new URL("./btc_historical_data.parquet", document.baseURI).href
-    const source = `SELECT strftime(riskdate, '%b-%y') as monthyear, riskdate, open, high, low, close, volume FROM read_parquet('${src}')`;
+    const src = new URL("./bankdataset.parquet", document.baseURI).href
+    const source = `SELECT Date, Domain, Location, Value, Transaction_count FROM read_parquet('${src}')`;
 
     const datasource = new DuckDbDatasource(duckdb, source);
     const gridOptions: GridOptions = {
@@ -44,13 +44,11 @@ class AgGridDuckDb extends LitElement {
       },
       serverSidePivotResultFieldSeparator: '_',
       columnDefs: [
-        { field: "monthyear", filter: 'agSetColumnFilter' },
-        { field: "riskdate", filter: 'agDateColumnFilter' },
-        { field: "open", filter: 'agNumberColumnFilter' },
-        { field: "high", filter: 'agNumberColumnFilter' },
-        { field: "low", filter: 'agNumberColumnFilter' },
-        { field: "close", filter: 'agNumberColumnFilter' },
-        { field: "volume", filter: 'agNumberColumnFilter' },
+        { field: "Date", filter: 'agSetColumnFilter' },
+        { field: "Domain", filter: 'agDateColumnFilter' },
+        { field: "Location", filter: 'agNumberColumnFilter' },
+        { field: "Value", filter: 'agNumberColumnFilter', enableValue: true },
+        { field: "Transaction_count", filter: 'agNumberColumnFilter', enableValue: true },
       ],
       sideBar: [
         'columns',

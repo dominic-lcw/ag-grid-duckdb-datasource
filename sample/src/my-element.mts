@@ -31,8 +31,8 @@ class AgGridDuckDb extends LitElement {
   onDivChanged(div: Element | undefined): void {
     if (!div) return;
 
-    const src = new URL("./userdata1.parquet", document.baseURI).href
-    const source = `SELECT * FROM read_parquet('${src}')`;
+    const src = new URL("./btc_historical_data.parquet", document.baseURI).href
+    const source = `SELECT strftime(riskdate, '%b-%y') as monthyear, riskdate, open, high, low, close, volume FROM read_parquet('${src}')`;
 
     const datasource = new DuckDbDatasource(duckdb, source);
     const gridOptions: GridOptions = {
@@ -44,13 +44,13 @@ class AgGridDuckDb extends LitElement {
       },
       serverSidePivotResultFieldSeparator: '_',
       columnDefs: [
-        { field: "first_name", filter: 'agTextColumnFilter'   },
-        { field: "last_name", filter: 'agTextColumnFilter' },
-        { field: "title", filter: 'agTextColumnFilter' },
-        { field: "gender", filter: 'agSetColumnFilter', enablePivot: true },
-        { field: "country", filter: 'agSetColumnFilter' },
-        { field: "salary", filter: 'agNumberColumnFilter', defaultAggFunc: 'sum', allowedAggFuncs: ['sum', 'min', 'max', 'avg'], enableValue: true },
-        { field: "birthdate", filter: 'agDateColumnFilter' },
+        { field: "monthyear", filter: 'agSetColumnFilter' },
+        { field: "riskdate", filter: 'agDateColumnFilter' },
+        { field: "open", filter: 'agNumberColumnFilter' },
+        { field: "high", filter: 'agNumberColumnFilter' },
+        { field: "low", filter: 'agNumberColumnFilter' },
+        { field: "close", filter: 'agNumberColumnFilter' },
+        { field: "volume", filter: 'agNumberColumnFilter' },
       ],
       sideBar: [
         'columns',
